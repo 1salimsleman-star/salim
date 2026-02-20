@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK History & Literature Quiz - كامل (50 سؤال)</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-blue: #2196F3;
+            --accent-yellow: #d4af37; /* أصفر داكن */
+            --accent-purple: #8e44ad;
+            --translation-color: #c4a484; /* بني فاتح */
+            --correct-green: #2e7d32;
+            --wrong-red: #c62828;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        #quiz-container {
+            width: 100%;
+            max-width: 850px;
+            background-color: var(--container-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #question-counter { font-size: 1.1rem; color: var(--accent-blue); }
+        #score-display { font-size: 1.2rem; font-weight: bold; color: var(--accent-yellow); }
+
+        .question-section { margin-bottom: 25px; }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .translation-text {
+            display: none;
+            color: var(--translation-color);
+            font-size: 1.1rem;
+            margin-top: 5px;
+            text-align: right;
+            direction: rtl;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #333;
+            color: white;
+            border: 2px solid #444;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover { border-color: var(--accent-blue); }
+
+        .option-translation {
+            display: none;
+            color: var(--translation-color);
+            margin-top: 5px;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .correct { background-color: var(--correct-green) !important; border-color: #4CAF50 !important; }
+        .wrong { background-color: var(--wrong-red) !important; border-color: #f44336 !important; }
+
+        .evidence-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-left: 4px solid var(--accent-blue);
+            background-color: #252525;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .evidence-ar {
+            direction: rtl;
+            text-align: right;
+            display: block;
+            margin-top: 10px;
+            color: #bbb;
+        }
+
+        .benefits-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid var(--accent-purple);
+            background-color: #2a1b3d;
+            border-radius: 8px;
+        }
+
+        .benefits-title { color: var(--accent-purple); font-weight: bold; margin-bottom: 10px; text-align: center; }
+
+        .benefit-item { margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 5px; text-align: left;}
+        .benefit-trans { color: var(--translation-color); display: block; direction: rtl; text-align: right; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .translate-trigger-btn {
+            background-color: #444;
+            color: white;
+            border: 1px solid #666;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div class="header-info">
+        <div id="question-counter">Question: 1 / 50</div>
+        <div id="score-display">Score: 0%</div>
+    </div>
+
+    <div id="quiz-content">
+        <div class="question-section">
+            <div id="q-text" class="question-text"></div>
+            <div id="q-trans" class="translation-text"></div>
+        </div>
+
+        <div id="options" class="options-container"></div>
+
+        <div id="evidence" class="evidence-section"></div>
+        
+        <div id="benefits" class="benefits-box">
+            <div class="benefits-title">Benefits / فوائد:</div>
+            <div id="benefits-content"></div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <button id="prev-btn" class="nav-btn">Back (Left)</button>
+        <button id="translate-btn" class="translate-trigger-btn">Translate (Shift+Enter)</button>
+        <button id="next-btn" class="nav-btn">Next (Right)</button>
+    </div>
+</div>
+
+<script>
+    // -------------------- جميع الأسئلة 1-50 --------------------
+    const questions = [
+        // الأسئلة 1-10 (الجزء الأول)
+        {
+            id: 1,
+            point: 1,
+            qEng: "Which of the following is NOT one of the four constituent parts of the UK?",
+            qAr: "أي مما يلي ليس أحد الأجزاء الأربعة المكونة للمملكة المتحدة؟",
+            options: [
+                { eng: "Scotland", ar: "اسكتلندا", correct: false, note: "Incorrect because Scotland is one of the four parts." },
+                { eng: "Wales", ar: "ويلز", correct: false, note: "Incorrect because Wales is a key constituent part." },
+                { eng: "Republic of Ireland", ar: "جمهورية أيرلندا", correct: true, note: "Correct because only Northern Ireland is part of the UK, not the Republic." },
+                { eng: "Northern Ireland", ar: "أيرلندا الشمالية", correct: false, note: "Incorrect because Northern Ireland is part of the UK." }
+            ],
+            evidenceEng: "Point 1 states: The UK consists of 4 parts: England, Scotland, Northern Ireland and Wales.",
+            evidenceAr: "تنص النقطة رقم (1) على: تتكون المملكة المتحدة من 4 أجزاء: إنجلترا، واسكتلندا، وأيرلندا الشمالية، وويلز."
+        },
+        {
+            id: 2,
+            point: 2,
+            qEng: "The term 'Welsh' in Old English historically translates to:",
+            qAr: "كلمة 'Welsh' في اللغة الإنجليزية القديمة تترجم تاريخياً إلى:",
+            options: [
+                { eng: "Brave warriors", ar: "محاربون شجعان", correct: false, note: "Wrong, the term had a linguistic meaning related to identity, not bravery." },
+                { eng: "Foreigners", ar: "الأجانب", correct: true, note: "Correct. Invaders used this term to describe the original inhabitants." },
+                { eng: "Original settlers", ar: "السكان الأصليون", correct: false, note: "Wrong, although they were original settlers, the name given to them meant foreigners." },
+                { eng: "Mountain people", ar: "سكان الجبال", correct: false, note: "Incorrect, this is not the linguistic origin of the word." }
+            ],
+            evidenceEng: "Point 2 states: The word ‘Welsh’ in Old English means foreigners.",
+            evidenceAr: "تنص النقطة رقم (2) على: تعني كلمة 'Welsh' في اللغة الإنجليزية القديمة الأجانب."
+        },
+        {
+            id: 3,
+            point: 2,
+            qEng: "According to the sources, who were the very first people to inhabit the UK?",
+            qAr: "وفقاً للمصادر، من هم أول من سكن المملكة المتحدة؟",
+            options: [
+                { eng: "The Romans", ar: "الرومان", correct: false, note: "Incorrect, the Romans were the first invaders, not the first inhabitants." },
+                { eng: "The Anglo-Saxons", ar: "الأنجلوسكسون", correct: false, note: "Wrong, they arrived much later in the 5th century." },
+                { eng: "The Welsh", ar: "الويلزيون", correct: true, note: "Correct, the sources identify them as the first people in Wales/UK." },
+                { eng: "The Vikings", ar: "الفايكنج", correct: false, note: "Incorrect, they came from Northern Europe much later." }
+            ],
+            evidenceEng: "Point 2 states: The first people who lived in the UK are Welsh people in Wales.",
+            evidenceAr: "تنص النقطة رقم (2) على: أول من سكن المملكة المتحدة هم الويلزيون في ويلز."
+        },
+        {
+            id: 4,
+            point: 3,
+            qEng: "The linguistic roots of the original Irish and Welsh settlers are categorized as:",
+            qAr: "تُصنف الجذور اللغوية للمستوطنين الأصليين الأيرلنديين والويلزيين على أنها:",
+            options: [
+                { eng: "Germanic", ar: "جرمانية", correct: false, note: "Wrong, Germanic roots are associated with Anglo-Saxons." },
+                { eng: "Latin", ar: "لاتينية", correct: false, note: "Wrong, Latin was the language of the Romans." },
+                { eng: "Celtic", ar: "كلتية", correct: true, note: "Correct, the language of the original settlers is called Celtic." },
+                { eng: "Scandinavian", ar: "اسكندنافية", correct: false, note: "Incorrect, this is related to the Vikings." }
+            ],
+            evidenceEng: "Point 3 states: The language of the Irish and the Welsh is called Celtic.",
+            evidenceAr: "تنص النقطة رقم (3) على: تُسمى لغة الأيرلنديين والويلزيين بـ 'الكلتية'."
+        },
+        {
+            id: 5,
+            point: 4,
+            qEng: "In which century did the Roman invasion of Britain begin?",
+            qAr: "في أي قرن بدأ الغزو الروماني لبريطانيا؟",
+            options: [
+                { eng: "1st Century BC", ar: "القرن الأول قبل الميلاد", correct: false, note: "Wrong, the invasion recorded in the sources was in 43 AD." },
+                { eng: "1st Century AD", ar: "القرن الأول الميلادي", correct: true, note: "Correct, it began in the year 43 AD." },
+                { eng: "5th Century AD", ar: "القرن الخامس الميلادي", correct: false, note: "Wrong, this is when the Romans left and Anglo-Saxons arrived." },
+                { eng: "4th Century AD", ar: "القرن الرابع الميلادي", correct: false, note: "Incorrect, the invasion was already ending by the start of the 5th." }
+            ],
+            evidenceEng: "Point 4 states: The first invaders of the UK were the Romans... in the 1st century, in year 43.",
+            evidenceAr: "تنص النقطة رقم (4) على: كان أوّل غزاة المملكة المتحدة هم الرومان... في القرن الأوّل، في سنة 43."
+        },
+        {
+            id: 6,
+            point: 4,
+            qEng: "What was the exact duration of the Roman Empire's invasion/occupation of Britain?",
+            qAr: "ما هي المدة الدقيقة لغزو/احتلال الإمبراطورية الرومانية لبريطانيا؟",
+            options: [
+                { eng: "300 years", ar: "300 سنة", correct: false, note: "Incorrect according to the source duration (43-410 AD)." },
+                { eng: "450 years", ar: "450 سنة", correct: false, note: "Wrong, the duration was slightly less than this." },
+                { eng: "400 years", ar: "400 سنة", correct: true, note: "Correct, the source explicitly mentions it lasted 400 years." },
+                { eng: "500 years", ar: "500 سنة", correct: false, note: "Incorrect calculation." }
+            ],
+            evidenceEng: "Point 4 states: The Roman Empire invasion lasted 400 years (43AD-410AD).",
+            evidenceAr: "تنص النقطة رقم (4) على: استمرّ غزو الإمبراطورية الرومانية 400 سنة (43م–410م)."
+        },
+        {
+            id: 7,
+            point: 5,
+            qEng: "The Romans referred to the land they invaded as:",
+            qAr: "أشار الرومان إلى الأرض التي غزوها باسم:",
+            options: [
+                { eng: "Jutland", ar: "جوتلاند", correct: false, note: "Wrong, Jutland is in Denmark/Germany." },
+                { eng: "Northumbria", ar: "نورثمبريا", correct: false, note: "Wrong, this is an Anglo-Saxon kingdom." },
+                { eng: "Britannia", ar: "بريتانيا", correct: true, note: "Correct, this was the Roman name for the land." },
+                { eng: "Mercia", ar: "ميرسيا", correct: false, note: "Wrong, this is an Anglo-Saxon kingdom." }
+            ],
+            evidenceEng: "Point 5 states: The Romans called this land Britannia.",
+            evidenceAr: "تنص النقطة رقم (5) على: سمّى الرومان هذه الأرض بريتانيا."
+        },
+        {
+            id: 8,
+            point: 5,
+            qEng: "Which languages were primarily used by the Romans during their occupation?",
+            qAr: "ما هي اللغات التي استخدمها الرومان بشكل أساسي أثناء احتلالهم؟",
+            options: [
+                { eng: "Old English and Latin", ar: "الإنجليزية القديمة واللاتينية", correct: false, note: "Wrong, Old English appeared after they left." },
+                { eng: "Greek and Celtic", ar: "اليونانية والكلتية", correct: false, note: "Wrong, Celtic was the language of the natives." },
+                { eng: "Latin and Greek", ar: "اللاتينية واليونانية", correct: true, note: "Correct, they used both, but mainly Latin." },
+                { eng: "Latin and Germanic", ar: "اللاتينية والجرمانية", correct: false, note: "Wrong, Germanic came with the Anglo-Saxons." }
+            ],
+            evidenceEng: "Point 5 states: Their language was Latin and Greek, but mainly Latin.",
+            evidenceAr: "تنص النقطة رقم (5) على: كانت لغتهم اللاتينية واليونانية، ولكن أساسًا اللاتينية."
+        },
+        {
+            id: 9,
+            point: 7,
+            qEng: "Following the fall of the Roman Empire, which tribes migrated specifically from Eastern Europe?",
+            qAr: "بعد سقوط الإمبراطورية الرومانية، أي القبائل هاجرت تحديداً من أوروبا الشرقية؟",
+            options: [
+                { eng: "Anglos and Saxons", ar: "الأنجلوس والسكسون", correct: false, note: "Wrong, they migrated from Western Europe." },
+                { eng: "Goths and Vandals", ar: "القوط والوندال", correct: true, note: "Correct, these tribes came from Eastern Europe." },
+                { eng: "Vikings and Celts", ar: "الفايكنج والكلت", correct: false, note: "Wrong, Celts were already there; Vikings came later." },
+                { eng: "Jutes and Frisians", ar: "يوتس وفريزيان", correct: false, note: "Incorrect according to the source categorization." }
+            ],
+            evidenceEng: "Point 7 states: Goths and the Vandals tribes migrated from Eastern Europe to settle in the UK.",
+            evidenceAr: "تنص النقطة رقم (7) على: هاجرت قبائل القوط والوندال من أوروبا الشرقية للاستقرار في المملكة المتحدة."
+        },
+        {
+            id: 10,
+            point: 8,
+            qEng: "The Anglo-Saxons originally arrived in England during the 5th and 6th centuries serving as:",
+            qAr: "وصل الأنجلوسكسون في الأصل إلى إنجلترا خلال القرنين الخامس والسادس للعمل كـ:",
+            options: [
+                { eng: "Farmers", ar: "مزارعين", correct: false, note: "Incorrect, they primarily came for military service initially." },
+                { eng: "Religious missionaries", ar: "مبشرين دينيين", correct: false, note: "Wrong, they were pagans when they arrived." },
+                { eng: "Mercenaries", ar: "مرتزقة", correct: true, note: "Correct, they came as hired soldiers (mercenaries)." },
+                { eng: "Merchants", ar: "تجار", correct: false, note: "Wrong, their primary role was military." }
+            ],
+            evidenceEng: "Point 8 states: The Anglo-Saxons came to England as mercenaries in 5th and 6th century.",
+            evidenceAr: "تنص النقطة رقم (8) على: جاء الأنجلوسكسون إلى إنجلترا كمرتزقة في القرن الخامس والسادس."
+        },
+        // الأسئلة 11-20 (الجزء الثاني)
+        {
+            id: 11,
+            point: 8,
+            qEng: "What was the religious status of the Anglo-Saxon tribes upon their arrival?",
+            qAr: "ما هي الحالة الدينية لقبائل الأنجلوسكسون عند وصولهم؟",
+            options: [
+                { eng: "Christian", ar: "مسيحيون", correct: false, note: "Incorrect, they converted later after mixing with Roman culture." },
+                { eng: "Pagan", ar: "وثنيون", correct: true, note: "Correct, the source explicitly states they were pagan tribes." },
+                { eng: "Catholic", ar: "كاثوليك", correct: false, note: "Incorrect, this is a later Christian denomination." },
+                { eng: "Orthodox", ar: "أرثوذكس", correct: false, note: "Incorrect, not applicable to their status upon arrival." }
+            ],
+            evidenceEng: "Point 8 states: The Anglo-Saxons... were pagan tribes.",
+            evidenceAr: "تنص النقطة رقم (8) على: كان الأنجلوسكسون... قبائل وثنية."
+        },
+        {
+            id: 12,
+            point: 9,
+            qEng: "Which stage of the English language is noted for having characteristics of both Old and Modern English?",
+            qAr: "أي مرحلة من مراحل اللغة الإنجليزية لوحظ أنها تحمل خصائص كل من الإنجليزية القديمة والحديثة؟",
+            options: [
+                { eng: "Early English", ar: "الإنجليزية المبكرة", correct: false, note: "Incorrect, this term is too broad." },
+                { eng: "Middle English", ar: "الإنجليزية الوسطى", correct: true, note: "Correct, it acted as a transitional stage between the two." },
+                { eng: "Proto-English", ar: "البروتو-إنجليزية", correct: false, note: "Incorrect, this refers to an even earlier stage." },
+                { eng: "Late English", ar: "الإنجليزية المتأخرة", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 9 states: Middle English had characteristics of both Old English and Modern English.",
+            evidenceAr: "تنص النقطة رقم (9) على: كانت الإنجليزية الوسطى تحمل خصائص كلٍّ من الإنجليزية القديمة والإنجليزية الحديثة."
+        },
+        {
+            id: 13,
+            point: 10,
+            qEng: "In the Old English period, prose was primarily utilized for:",
+            qAr: "في فترة اللغة الإنجليزية القديمة، كان النثر يستخدم بشكل أساسي لـ:",
+            options: [
+                { eng: "Epic storytelling", ar: "رواية القصص الملحمية", correct: false, note: "Wrong, epic stories were usually in the form of poetry." },
+                { eng: "Musical performances", ar: "العروض الموسيقية", correct: false, note: "Wrong, music was linked to sung poetry." },
+                { eng: "Documenting history and correspondence", ar: "توثيق التاريخ والمراسلات", correct: true, note: "Correct, prose served functional and historical purposes." },
+                { eng: "Entertainment for the masses", ar: "ترفيه الجماهير", correct: false, note: "Incorrect, its primary use was formal documentation." }
+            ],
+            evidenceEng: "Point 10 states: In the past, prose was used to document history and correspondence.",
+            evidenceAr: "تنص النقطة رقم (10) على: في الماضي، كان النثر يُستخدم لتوثيق التاريخ والمراسلات."
+        },
+        {
+            id: 14,
+            point: 10,
+            qEng: "Who were the primary authors of prose literature like biographies and religious documents?",
+            qAr: "من هم المؤلفون الأساسيون للأدب النثري مثل السير الذاتية والوثائق الدينية؟",
+            options: [
+                { eng: "Kings and warriors", ar: "الملوك والمحاربون", correct: false, note: "Incorrect, they were usually the subjects, not the authors." },
+                { eng: "Men of religion and priests", ar: "رجال الدين والكهنة", correct: true, note: "Correct, they were the literate class who wrote in prose." },
+                { eng: "Traveling minstrels", ar: "المنشدون المتجولون", correct: false, note: "Wrong, they were associated with oral poetry." },
+                { eng: "Merchants and sailors", ar: "التجار والبحارة", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 10 states: Literature... was mainly written in prose like religious documents... by men of religion and priests.",
+            evidenceAr: "تنص النقطة رقم (10) على: كان الأدب... يُكتب أساسًا نثرًا مثل الوثائق الدينية... على يد رجال الدين والكهنة."
+        },
+        {
+            id: 15,
+            point: 11,
+            qEng: "What was the fundamental delivery method of early poetry among the people?",
+            qAr: "ما هي الطريقة الأساسية لنقل الشعر المبكر بين الناس؟",
+            options: [
+                { eng: "Written manuscripts", ar: "المخطوطات المكتوبة", correct: false, note: "Incorrect, writing came much later for poetry." },
+                { eng: "Sung and recited orally", ar: "الغناء والإلقاء الشفهي", correct: true, note: "Correct, it was passed from person to person through singing." },
+                { eng: "Stone inscriptions", ar: "النقوش الحجرية", correct: false, note: "Wrong, not a primary method for poetry." },
+                { eng: "Silent reading", ar: "القراءة الصامتة", correct: false, note: "Incorrect, it was a communal and oral art form." }
+            ],
+            evidenceEng: "Point 11 states: It (Poetry) was sung and recited from people to people.",
+            evidenceAr: "تنص النقطة رقم (11) على: كان (الشعر) يُغنّى ويُتلى من الناس إلى الناس."
+        },
+        {
+            id: 16,
+            point: 12,
+            qEng: "What is recognized as the first poem ever written in Old English?",
+            qAr: "ما هي أول قصيدة تم الاعتراف بكتابتها باللغة الإنجليزية القديمة؟",
+            options: [
+                { eng: "The Ecclesiastical History", ar: "التاريخ الكنسي", correct: false, note: "Wrong, this is a prose historical work by Bede." },
+                { eng: "Caedmon’s Hymn", ar: "ترنيمة كادمون", correct: false, note: "Note: While historically significant, the source explicitly names another." },
+                { eng: "Beowulf", ar: "بيوولف", correct: true, note: "Correct, as per Point 12 in the source." },
+                { eng: "The Anglo-Saxon Chronicle", ar: "الوقائع الأنجلوسكسونية", correct: false, note: "Incorrect, this is a historical record." }
+            ],
+            evidenceEng: "Point 12 states: The first poem to be written in Old English is Beowulf.",
+            evidenceAr: "تنص النقطة رقم (12) على: أول قصيدة كُتبت بالإنجليزية القديمة هي بيوولف."
+        },
+        {
+            id: 17,
+            point: 12,
+            qEng: "How many lines comprise the long epic poem Beowulf?",
+            qAr: "كم عدد الأسطر التي تتكون منها الملحمة الشعرية الطويلة 'بيوولف'؟",
+            options: [
+                { eng: "1000 lines", ar: "1000 سطر", correct: false, note: "Incorrect." },
+                { eng: "3000 lines", ar: "3000 سطر", correct: true, note: "Correct, it is explicitly mentioned as a long poem of 3000 lines." },
+                { eng: "5000 lines", ar: "5000 سطر", correct: false, note: "Incorrect." },
+                { eng: "871 lines", ar: "871 سطر", correct: false, note: "Wrong, that number refers to Alfred the Great's start of rule." }
+            ],
+            evidenceEng: "Point 12 states: It is a long poem written in 3000 lines.",
+            evidenceAr: "تنص النقطة رقم (12) على: وهي قصيدة طويلة كُتبت في 3000 سطر."
+        },
+        {
+            id: 18,
+            point: 13,
+            qEng: "In which geographical location does Beowulf fight the antagonist Grendel?",
+            qAr: "في أي موقع جغرافي يقاتل بيوولف خصمه جريندل؟",
+            options: [
+                { eng: "Northumbria", ar: "نورثمبريا", correct: false, note: "Wrong, this is an Anglo-Saxon kingdom in England." },
+                { eng: "Jutland", ar: "جوتلاند", correct: true, note: "Correct, the fight takes place in Jutland (Denmark and Germany)." },
+                { eng: "Wessex", ar: "ويسيكس", correct: false, note: "Wrong, this is King Alfred's region." },
+                { eng: "Britannia", ar: "بريتانيا", correct: false, note: "Wrong, this was the Roman name for Britain." }
+            ],
+            evidenceEng: "Point 13 states: Beowulf... fights... Grendel in Jutland (Denmark and Germany).",
+            evidenceAr: "تنص النقطة رقم (13) على: بيوولف... يقاتل... جريندل في جوتلاند (الدنمارك وألمانيا)."
+        },
+        {
+            id: 19,
+            point: 13,
+            qEng: "The antagonist Grendel is described as being:",
+            qAr: "يتم وصف الخصم 'جريندل' بأنه:",
+            options: [
+                { eng: "A pure demon", ar: "شيطان خالص", correct: false, note: "Incorrect, the description is more specific." },
+                { eng: "Half-human and half-monster", ar: "نصف إنسان ونصف وحش", correct: true, note: "Correct, this is the exact physical description given." },
+                { eng: "A fallen king", ar: "ملك ساقط", correct: false, note: "Incorrect." },
+                { eng: "A giant from the north", ar: "عملاق من الشمال", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 13 states: Beowulf... fights the antagonist half-human and half-monster Grendel.",
+            evidenceAr: "تنص النقطة رقم (13) على: بيوولف... يقاتل الخصم نصف الإنسان ونصف الوحش جريندل."
+        },
+        {
+            id: 20,
+            point: 13,
+            qEng: "Beowulf fought Grendel on behalf of which king?",
+            qAr: "من أجل أي ملك قاتل بيوولف ضد جريندل؟",
+            options: [
+                { eng: "King Alfred", ar: "الملك ألفريد", correct: false, note: "Wrong, he was a real English king much later." },
+                { eng: "King Hrothgar", ar: "الملك هروثغار", correct: true, note: "Correct, he fought for King Hrothgar." },
+                { eng: "King Caedmon", ar: "الملك كادمون", correct: false, note: "Wrong, Caedmon was a poet/monk, not a king." },
+                { eng: "King Bede", ar: "الملك بيد", correct: false, note: "Wrong, Bede was a historian/monk." }
+            ],
+            evidenceEng: "Point 13 states: Beowulf... fights... Grendel... for king Hrothgar.",
+            evidenceAr: "تنص النقطة رقم (13) على: بيوولف... يقاتل... جريندل... من أجل الملك هروثغار."
+        },
+        // الأسئلة 21-30 (الجزء الثالث)
+        {
+            id: 21,
+            point: 14,
+            qEng: "Although an Anglo-Saxon poem, Beowulf originated in:",
+            qAr: "على الرغم من أنها قصيدة أنجلوسكسونية، إلا أن بيوولف نشأت في:",
+            options: [
+                { eng: "Northern Ireland", ar: "أيرلندا الشمالية", correct: false, note: "Wrong, the poem didn't originate there." },
+                { eng: "Wales", ar: "ويلز", correct: false, note: "Wrong, Wales is the land of the original settlers, not this poem's origin." },
+                { eng: "Western Europe (Denmark and Germany)", ar: "أوروبا الغربية (الدنمارك وألمانيا)", correct: true, note: "Correct, the source states it originated in Denmark and Germany." },
+                { eng: "Southern England", ar: "جنوب إنجلترا", correct: false, note: "Wrong, it was brought to England later." }
+            ],
+            evidenceEng: "Point 14 states: It (Beowulf) originated in Western Europe (Denmark and German).",
+            evidenceAr: "تنص النقطة رقم (14) على: نشأت (بيوولف) في أوروبا الغربية (الدنمارك وألمانيا)."
+        },
+        {
+            id: 22,
+            point: 14,
+            qEng: "In which century was the story of Beowulf brought to England by people who had memorized it?",
+            qAr: "في أي قرن أُحضرت قصة بيوولف إلى إنجلترا من قبل أشخاص حفظوها؟",
+            options: [
+                { eng: "5th Century", ar: "القرن الخامس", correct: false, note: "Wrong, this was the arrival of tribes, not the poem specifically." },
+                { eng: "11th Century", ar: "القرن الحادي عشر", correct: false, note: "Wrong, this is when the manuscript was written." },
+                { eng: "8th Century", ar: "القرن الثامن", correct: true, note: "Correct, it was brought by people who memorized it in the 8th century." },
+                { eng: "10th Century", ar: "القرن العاشر", correct: false, note: "Wrong, this was the Golden Age." }
+            ],
+            evidenceEng: "Point 14 states: It was brought to England by people who memorized it in the 8th century.",
+            evidenceAr: "تنص النقطة رقم (14) على: أُحضرت إلى إنجلترا على يد أشخاص حفظوها في القرن الثامن."
+        },
+        {
+            id: 23,
+            point: 15,
+            qEng: "When was the official written manuscript of Beowulf finally produced?",
+            qAr: "متى تم إنتاج المخطوطة الرسمية المكتوبة لبيوولف أخيراً؟",
+            options: [
+                { eng: "8th Century", ar: "القرن الثامن", correct: false, note: "Wrong, it was only memorized and brought in this century." },
+                { eng: "9th Century", ar: "القرن التاسع", correct: false, note: "Wrong, this was King Alfred's reign." },
+                { eng: "11th Century", ar: "القرن الحادي عشر", correct: true, note: "Correct, the official manuscript dates to the 11th century." },
+                { eng: "6th Century", ar: "القرن السادس", correct: false, note: "Wrong, prose recording hadn't even started properly for poetry then." }
+            ],
+            evidenceEng: "Point 15 states: The official manuscript of Beowulf was written in the 11th century.",
+            evidenceAr: "تنص النقطة رقم (15) على: كُتبت المخطوطة الرسمية لبيوولف في القرن الحادي عشر."
+        },
+        {
+            id: 24,
+            point: 15,
+            qEng: "Who is the credited composer/author of the poem Beowulf?",
+            qAr: "من هو المؤلف/الملحن المعتمد لقصيدة بيوولف؟",
+            options: [
+                { eng: "Bede", ar: "بيد", correct: false, note: "Wrong, Bede was a historian/monk." },
+                { eng: "Caedmon", ar: "كادمون", correct: false, note: "Wrong, Caedmon wrote hymns." },
+                { eng: "Anonymous", ar: "مجهول", correct: true, note: "Correct, the person who composed it remains unknown." },
+                { eng: "Alfred the Great", ar: "ألفريد العظيم", correct: false, note: "Wrong, he was a king." }
+            ],
+            evidenceEng: "Point 15 states: The person who composed it is anonymous.",
+            evidenceAr: "تنص النقطة رقم (15) على: والشخص الذي ألّفها مجهول."
+        },
+        {
+            id: 25,
+            point: 16,
+            qEng: "The language of Beowulf is described as being full of:",
+            qAr: "تُوصف لغة بيوولف بأنها مليئة بـ:",
+            options: [
+                { eng: "Soft vowels", ar: "حروف علة لينة", correct: false, note: "Wrong, the description is the opposite." },
+                { eng: "Strong and sharp consonants", ar: "حروف ساكنة قوية وحادة", correct: true, note: "Correct, it reflects the harsh nature of Western European languages." },
+                { eng: "Latin loanwords", ar: "كلمات مستعارة من اللاتينية", correct: false, note: "Wrong, not its primary characteristic." },
+                { eng: "Rhyming couplets", ar: "ثنائيات مقفاة", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 16 states: It was full of strong and sharp consonants.",
+            evidenceAr: "تنص النقطة رقم (16) على: كانت مليئة بالحروف الساكنة القوية والحادّة."
+        },
+        {
+            id: 26,
+            point: 16,
+            qEng: "What central theme is reflected in the 'cold, violent, and bloody' language of Beowulf?",
+            qAr: "ما هو الموضوع الرئيسي الذي تعكسه لغة بيوولف 'الباردة والعنيفة والدموية'؟",
+            options: [
+                { eng: "Religion", ar: "الدين", correct: false, note: "Wrong, although it has Christian elements, the language reflects something else." },
+                { eng: "Agriculture", ar: "الزراعة", correct: false, note: "Incorrect." },
+                { eng: "War", ar: "الحرب", correct: true, note: "Correct, the language represents the theme of war." },
+                { eng: "Romance", ar: "الرومانسية", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 16 states: The language... was cold violent and bloody as the theme it represented which is war.",
+            evidenceAr: "تنص النقطة رقم (16) على: كانت لغتها باردة وعنيفة ودموية مثل الموضوع الذي تمثّله وهو الحرب."
+        },
+        {
+            id: 27,
+            point: 17,
+            qEng: "Recorded English literature in the form of prose did not appear before the:",
+            qAr: "الأدب الإنجليزي المسجل في شكل نثر لم يظهر قبل:",
+            options: [
+                { eng: "1st Century", ar: "القرن الأول", correct: false, note: "Wrong, that was the Roman invasion." },
+                { eng: "8th Century", ar: "القرن الثامن", correct: false, note: "Wrong, it appeared earlier than this." },
+                { eng: "6th Century", ar: "القرن السادس", correct: true, note: "Correct, it was not recorded before the 6th century." },
+                { eng: "11th Century", ar: "القرن الحادي عشر", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 17 states: Early English literature written in prose was not recorded before the 6th century.",
+            evidenceAr: "تنص النقطة رقم (17) على: لم يُسجَّل الأدب الإنجليزي المبكر المكتوب نثرًا قبل القرن السادس."
+        },
+        {
+            id: 28,
+            point: 18,
+            qEng: "Between the 5th and 8th centuries, England was ruled exclusively by:",
+            qAr: "بين القرنين الخامس والثامن، كانت إنجلترا تُحكم حصرياً من قبل:",
+            options: [
+                { eng: "The Romans", ar: "الرومان", correct: false, note: "Wrong, they left in 410 AD (5th century)." },
+                { eng: "The Vikings", ar: "الفايكنج", correct: false, note: "Wrong, they arrived later." },
+                { eng: "The Anglo-Saxons", ar: "الأنجلوسكسون", correct: true, note: "Correct, they were the sole rulers during this specific period." },
+                { eng: "The Celts", ar: "الكلت", correct: false, note: "Wrong, they were the original settlers being ruled/pushed out." }
+            ],
+            evidenceEng: "Point 18 states: From the 5th century until the 8th century England was ruled only by the Anglo-Saxons.",
+            evidenceAr: "تنص النقطة رقم (18) على: من القرن الخامس حتى القرن الثامن كانت إنجلترا تُحكم فقط من قبل الأنجلوسكسون."
+        },
+        {
+            id: 29,
+            point: 19,
+            qEng: "The Vikings originally hailed from Northern Europe, specifically areas like:",
+            qAr: "ينحدر الفايكنج أصلاً من شمال أوروبا، وتحديداً من مناطق مثل:",
+            options: [
+                { eng: "Germany", ar: "ألمانيا", correct: false, note: "Incorrect according to the source." },
+                { eng: "Denmark", ar: "الدنمارك", correct: true, note: "Correct, Denmark is cited as their place of origin." },
+                { eng: "France", ar: "فرنسا", correct: false, note: "Incorrect." },
+                { eng: "Italy", ar: "إيطاليا", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 19 states: Vikings came originally from Northern Europe like Denmark.",
+            evidenceAr: "تنص النقطة رقم (19) على: جاء الفايكنغ أصلًا من شمال أوروبا مثل الدنمارك."
+        },
+        {
+            id: 30,
+            point: 21,
+            qEng: "Old English was formed through the linguistic mixture of:",
+            qAr: "تشكلت اللغة الإنجليزية القديمة من خلال المزيج اللغوي لـ:",
+            options: [
+                { eng: "Celtic and Latin", ar: "الكلتية واللاتينية", correct: false, note: "Wrong, Celtic was the original language." },
+                { eng: "Latin and Germanic languages", ar: "اللغات اللاتينية والجرمانية", correct: true, note: "Correct, this mixture created Old English." },
+                { eng: "Greek and Celtic", ar: "اليونانية والكلتية", correct: false, note: "Incorrect." },
+                { eng: "Scandinavian and French", ar: "الاسكندنافية والفرنسية", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 21 states: The mixture of the Latin and Germanic languages created the Old English.",
+            evidenceAr: "تنص النقطة رقم (21) على: أدّى امتزاج اللغتين اللاتينية والجرمانية إلى نشوء الإنجليزية القديمة."
+        },
+        // الأسئلة 31-40 (الجزء الرابع)
+        {
+            id: 31,
+            point: 22,
+            qEng: "Caedmon, the 7th-century poet, held what occupation before his religious calling?",
+            qAr: "ما هي المهنة التي كان يشغلها الشاعر كادمون (القرن السابع) قبل دعوته الدينية؟",
+            options: [
+                { eng: "Priest", ar: "كاهن", correct: false, note: "Wrong, he only joined the religious life later." },
+                { eng: "Soldier", ar: "جندي", correct: false, note: "Incorrect." },
+                { eng: "Shepherd", ar: "راعي", correct: true, note: "Correct, he was originally a shepherd." },
+                { eng: "Historian", ar: "مؤرخ", correct: false, note: "Wrong, Bede was the historian." }
+            ],
+            evidenceEng: "Point 22 states: Originally, he (Caedmon) was a shepherd.",
+            evidenceAr: "تنص النقطة رقم (22) على: في الأصل كان (كادمون) راعيًا."
+        },
+        {
+            id: 32,
+            point: 22,
+            qEng: "What was unique about Caedmon’s literacy skills?",
+            qAr: "ما الذي كان فريداً في مهارات القراءة والكتابة لدى كادمون؟",
+            options: [
+                { eng: "He was a master of Latin", ar: "كان يتقن اللاتينية", correct: false, note: "Wrong, he was illiterate." },
+                { eng: "He did not know how to read or write", ar: "لم يكن يعرف القراءة أو الكتابة", correct: true, note: "Correct, he was illiterate according to the sources." },
+                { eng: "He wrote only in Greek", ar: "كتب فقط باليونانية", correct: false, note: "Incorrect." },
+                { eng: "He translated Roman texts", ar: "ترجم النصوص الرومانية", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 22 states: He did not know how to read and write.",
+            evidenceAr: "تنص النقطة رقم (22) على: لم يكن يعرف كيف يقرأ ويكتب."
+        },
+        {
+            id: 33,
+            point: 22,
+            qEng: "In his later life, Caedmon became a:",
+            qAr: "في وقت لاحق من حياته، أصبح كادمون:",
+            options: [
+                { eng: "King", ar: "ملكاً", correct: false, note: "Incorrect." },
+                { eng: "Monk", ar: "راهباً", correct: true, note: "Correct, he became a monk and started singing poetry about God." },
+                { eng: "Merchant", ar: "تاجراً", correct: false, note: "Incorrect." },
+                { eng: "Warrior", ar: "محارباً", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 22 states: He became a monk and started singing rhymed poetry about God.",
+            evidenceAr: "تنص النقطة رقم (22) على: أصبح راهبًا وبدأ يغنّي شعرًا مقفّى عن الله."
+        },
+        {
+            id: 34,
+            point: 22,
+            qEng: "Caedmon’s poems were composed in the local accent of which region?",
+            qAr: "نُظمت قصائد كادمون بلهجة محلية لأي منطقة؟",
+            options: [
+                { eng: "Wessex", ar: "ويسيكس", correct: false, note: "Wrong, Wessex was King Alfred's region." },
+                { eng: "Mercia", ar: "ميرسيا", correct: false, note: "Wrong, this was one of the three parts but not his." },
+                { eng: "Northumbria", ar: "نورثمبريا", correct: true, note: "Correct, he used the local accent of Northumbria." },
+                { eng: "Jutland", ar: "جوتلاند", correct: false, note: "Wrong, that is in Western Europe." }
+            ],
+            evidenceEng: "Point 22 states: His poems were composed in a local Anglo-Saxon accent of Northumbria.",
+            evidenceAr: "تنص النقطة رقم (22) على: نُظمت قصائده بلهجة أنجلوسكسونية محلية من نورثمبريا."
+        },
+        {
+            id: 35,
+            point: 22,
+            qEng: "The 'Hymns' written by Caedmon are defined as:",
+            qAr: "تُعرف 'الترانيم' التي كتبها كادمون بأنها:",
+            options: [
+                { eng: "Epic war stories", ar: "قصص حرب ملحمية", correct: false, note: "Wrong, those describe Beowulf." },
+                { eng: "Religious songs", ar: "أغاني دينية", correct: true, note: "Correct, a hymn is defined as a religious song." },
+                { eng: "Historical chronologies", ar: "تسلسلات تاريخية", correct: false, note: "Wrong, this is Bede's work." },
+                { eng: "Legal documents", ar: "وثائق قانونية", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 22 states: He wrote hymns. A hymn is a religious song.",
+            evidenceAr: "تنص النقطة رقم (22) على: كتب ترانيم؛ والترنيمة هي أغنية دينية."
+        },
+        {
+            id: 36,
+            point: 23,
+            qEng: "Who is recognized as the first Anglo-Saxon historian?",
+            qAr: "من المعترف به كأول مؤرخ أنجلوسكسوني؟",
+            options: [
+                { eng: "Caedmon", ar: "كادمون", correct: false, note: "Wrong, he was a poet." },
+                { eng: "Alfred the Great", ar: "ألفريد العظيم", correct: false, note: "Wrong, he was a king." },
+                { eng: "Bede", ar: "بيد", correct: true, note: "Correct, Bede was the first historian." },
+                { eng: "Hrothgar", ar: "هروثغار", correct: false, note: "Wrong, he was the king in Beowulf." }
+            ],
+            evidenceEng: "Point 23 states: Bede (8th century) was the first Anglo-Saxon historian.",
+            evidenceAr: "تنص النقطة رقم (23) على: كان بيد (القرن الثامن) أول مؤرخ أنجلوسكسوني."
+        },
+        {
+            id: 37,
+            point: 23,
+            qEng: "Bede was a member of the clergy, specifically a:",
+            qAr: "كان بيد عضواً في سلك الكهنوت، وتحديداً:",
+            options: [
+                { eng: "Bishop", ar: "أسقف", correct: false, note: "Incorrect." },
+                { eng: "Pope", ar: "بابا", correct: false, note: "Incorrect." },
+                { eng: "Monk", ar: "راهب", correct: true, note: "Correct, the source mentions he was a monk." },
+                { eng: "Priest", ar: "كاهن", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 23 states: He (Bede) was a monk.",
+            evidenceAr: "تنص النقطة رقم (23) على: كان (بيد) راهبًا."
+        },
+        {
+            id: 38,
+            point: 24,
+            qEng: "What is the title of the major work written by Bede?",
+            qAr: "ما هو عنوان العمل الرئيسي الذي كتبه بيد؟",
+            options: [
+                { eng: "Beowulf", ar: "بيوولف", correct: false, note: "Wrong, the author of Beowulf is anonymous." },
+                { eng: "The Ecclesiastical History of the English People", ar: "التاريخ الكنسي للشعب الإنجليزي", correct: true, note: "Correct, this is his famous historical work." },
+                { eng: "The Anglo-Saxon Golden Age", ar: "العصر الذهبي للأنجلوسكسون", correct: false, note: "Incorrect title." },
+                { eng: "The History of Britannia", ar: "تاريخ بريتانيا", correct: false, note: "Incorrect title." }
+            ],
+            evidenceEng: "Point 24 states: Bede wrote The Ecclesiastical {Christian} History of the English People.",
+            evidenceAr: "تنص النقطة رقم (24) على: كتب بيد «التاريخ الكنسي {المسيحي} للشعب الإنجليزي»."
+        },
+        {
+            id: 39,
+            point: 24,
+            qEng: "In which language did Bede write his famous historical account?",
+            qAr: "بأي لغة كتب بيد حسابه التاريخي الشهير؟",
+            options: [
+                { eng: "Old English", ar: "الإنجليزية القديمة", correct: false, note: "Wrong, he used the language of scholars." },
+                { eng: "Celtic", ar: "الكلتية", correct: false, note: "Wrong, that was the language of the original settlers." },
+                { eng: "Latin", ar: "اللاتينية", correct: true, note: "Correct, the source states he wrote it in Latin." },
+                { eng: "Greek", ar: "اليونانية", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 24 states: Bede wrote The Ecclesiastical History... in Latin.",
+            evidenceAr: "تنص النقطة رقم (24) على: كتب بيد «التاريخ الكنسي...» باللاتينية."
+        },
+        {
+            id: 40,
+            point: 25,
+            qEng: "During the Anglo-Saxon era, England was divided into three main parts; which was considered the main part?",
+            qAr: "خلال العصر الأنجلوسكسوني، قُسمت إنجلترا إلى ثلاثة أجزاء رئيسية؛ أيها كان يعتبر الجزء الرئيسي؟",
+            options: [
+                { eng: "Mercia", ar: "ميرسيا", correct: false, note: "Incorrect, this was one of the three but not the main one." },
+                { eng: "Wessex", ar: "ويسيكس", correct: false, note: "Incorrect, although King Alfred was from here, the main part was elsewhere." },
+                { eng: "Northumbria", ar: "نورثمبريا", correct: true, note: "Correct, Northumbria was the main part according to Point 25." },
+                { eng: "East Anglia", ar: "شرق أنجليا", correct: false, note: "Not mentioned as one of the three main parts in the source." }
+            ],
+            evidenceEng: "Point 25 states: England was divided into three main parts... The main part was Northumbria.",
+            evidenceAr: "تنص النقطة رقم (25) على: قُسِّمت إنجلترا إلى ثلاثة أجزاء رئيسية... وكان الجزء الرئيسي نورثمبريا."
+        },
+        // الأسئلة 41-50 (الجزء الخامس)
+        {
+            id: 41,
+            point: 26,
+            qEng: "King Alfred the Great belonged to which group?",
+            qAr: "إلى أي مجموعة ينتمي الملك ألفريد العظيم؟",
+            options: [
+                { eng: "The Romans", ar: "الرومان", correct: false, note: "Wrong, the Romans had left centuries before his rule." },
+                { eng: "The Anglo-Saxons", ar: "الأنجلوسكسون", correct: true, note: "Correct, he was the famous Anglo-Saxon king of the 9th century." },
+                { eng: "The Vikings", ar: "الفايكنج", correct: false, note: "Wrong, he famously fought against the Vikings." },
+                { eng: "The Celts", ar: "الكلت", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 26 states: The Anglo-Saxon King Alfred the Great ruled England...",
+            evidenceAr: "تنص النقطة رقم (26) على: حكم الملك الأنجلوسكسوني ألفريد العظيم إنجلترا..."
+        },
+        {
+            id: 42,
+            point: 26,
+            qEng: "During which years did King Alfred the Great rule England?",
+            qAr: "خلال أي سنوات حكم الملك ألفريد العظيم إنجلترا؟",
+            options: [
+                { eng: "410–443", ar: "410–443", correct: false, note: "Wrong, these are the dates related to the Roman exit and early tribes." },
+                { eng: "871–899", ar: "871–899", correct: true, note: "Correct, these are the specific years mentioned in the source." },
+                { eng: "1000–1066", ar: "1000–1066", correct: false, note: "Wrong, this is later in the Middle Ages." },
+                { eng: "500–550", ar: "500–550", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 26 states: King Alfred the Great ruled England from 871 to 899.",
+            evidenceAr: "تنص النقطة رقم (26) على: حكم الملك ألفريد العظيم إنجلترا من 871 إلى 899."
+        },
+        {
+            id: 43,
+            point: 26,
+            qEng: "In which century did King Alfred the Great reign?",
+            qAr: "في أي قرن حكم الملك ألفريد العظيم؟",
+            options: [
+                { eng: "8th Century", ar: "القرن الثامن", correct: false, note: "Wrong, Bede was in the 8th century." },
+                { eng: "10th Century", ar: "القرن العاشر", correct: false, note: "Wrong, that was the Golden Age." },
+                { eng: "9th Century", ar: "القرن التاسع", correct: true, note: "Correct, he ruled at the end of the 9th century." },
+                { eng: "11th Century", ar: "القرن الحادي عشر", correct: false, note: "Wrong, that was the Beowulf manuscript era." }
+            ],
+            evidenceEng: "Point 26 states: King Alfred... ruled... in the 9th century.",
+            evidenceAr: "تنص النقطة رقم (26) على: حكم الملك ألفريد... في القرن التاسع."
+        },
+        {
+            id: 44,
+            point: 26,
+            qEng: "The 'Golden Age' of the Anglo-Saxons occurred in the:",
+            qAr: "حدث 'العصر الذهبي' للأنجلوسكسون في:",
+            options: [
+                { eng: "9th Century", ar: "القرن التاسع", correct: false, note: "Wrong, this was Alfred's reign." },
+                { eng: "10th Century", ar: "القرن العاشر", correct: true, note: "Correct, the 10th century is defined as the Golden Age." },
+                { eng: "8th Century", ar: "القرن الثامن", correct: false, note: "Incorrect." },
+                { eng: "11th Century", ar: "القرن الحادي عشر", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 26 states: The Anglo-Saxon golden age was in 10th century.",
+            evidenceAr: "تنص النقطة رقم (26) على: وكان العصر الذهبي للأنجلوسكسون في القرن العاشر."
+        },
+        {
+            id: 45,
+            point: 7,
+            qEng: "Which tribe migrated from Western Europe to settle in the UK?",
+            qAr: "أي قبيلة هاجرت من أوروبا الغربية للاستقرار في المملكة المتحدة؟",
+            options: [
+                { eng: "The Goths", ar: "القوط", correct: false, note: "Wrong, they came from Eastern Europe." },
+                { eng: "The Vandals", ar: "الوندال", correct: false, note: "Wrong, they came from Eastern Europe." },
+                { eng: "The Anglos and Saxons", ar: "الأنجلوس والسكسون", correct: true, note: "Correct, they migrated from Western Europe." },
+                { eng: "The Romans", ar: "الرومان", correct: false, note: "Wrong, they were invaders from the south/Empire." }
+            ],
+            evidenceEng: "Point 7 states: Anglos and the Saxons migrated from Western Europe.",
+            evidenceAr: "تنص النقطة رقم (7) على: هاجر الأنجلوس والسكسون من أوروبا الغربية."
+        },
+        {
+            id: 46,
+            point: 2,
+            qEng: "The Irish are described in the sources as:",
+            qAr: "يوصف الأيرلنديون في المصادر بأنهم:",
+            options: [
+                { eng: "Invaders from the North", ar: "غزاة من الشمال", correct: false, note: "Wrong, these were the Vikings." },
+                { eng: "Original settlers of the land", ar: "سكان أصليون للأرض", correct: true, note: "Correct, the source says Irish are original settlers like Welsh." },
+                { eng: "Roman mercenaries", ar: "مرتزقة رومان", correct: false, note: "Wrong, Anglo-Saxons were mercenaries." },
+                { eng: "Descendants of the Vikings", ar: "أحفاد الفايكنج", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 2 states: Irish people are original settlers of the land like Welsh people.",
+            evidenceAr: "تنص النقطة رقم (2) على: يُعد الأيرلنديون من السكان الأصليين للأرض مثلهم مثل الويلزيين."
+        },
+        {
+            id: 47,
+            point: 4,
+            qEng: "The Roman invasion began in the year 43 AD, which coincides with:",
+            qAr: "بدأ الغزو الروماني في عام 43م، وهو ما يتزامن مع:",
+            options: [
+                { eng: "The fall of the Empire", ar: "سقوط الإمبراطورية", correct: false, note: "Wrong, the Empire fell much later." },
+                { eng: "The beginning of Christianity", ar: "بداية المسيحية", correct: true, note: "Correct, it happened at the beginning of Christianity in the 1st century." },
+                { eng: "The Anglo-Saxon Golden Age", ar: "العصر الذهبي للأنجلوسكسون", correct: false, note: "Wrong, that was 10th century." },
+                { eng: "The composition of Beowulf", ar: "تأليف بيوولف", correct: false, note: "Wrong, that was centuries later." }
+            ],
+            evidenceEng: "Point 4 states: The first invaders... were the Romans at the beginning of Christianity in... year 43.",
+            evidenceAr: "تنص النقطة رقم (4) على: كان أوّل غزاة المملكة المتحدة هم الرومان في بداية المسيحية... في سنة 43."
+        },
+        {
+            id: 48,
+            point: 11,
+            qEng: "Which of the following was a characteristic of Old English literature?",
+            qAr: "أي مما يلي كان من خصائص أدب الإنجليزية القديمة؟",
+            options: [
+                { eng: "Prose was used for adventures", ar: "استخدم النثر للمغامرات", correct: false, note: "Wrong, poetry was used for adventures." },
+                { eng: "Poetry was used for letters", ar: "استخدم الشعر للرسائل", correct: false, note: "Wrong, prose was used for letters." },
+                { eng: "Poetry depended on stories and adventures", ar: "اعتمد الشعر على القصص والمغامرات", correct: true, note: "Correct, poetry focused on stories/adventures while prose was functional." },
+                { eng: "Prose was always sung", ar: "كان النثر يُغنى دائماً", correct: false, note: "Wrong, poetry was sung." }
+            ],
+            evidenceEng: "Point 11 states: Poetry depended on stories and adventures. It was sung.",
+            evidenceAr: "تنص النقطة رقم (11) على: اعتمد الشعر على القصص والمغامرات. وكان يُغنّى."
+        },
+        {
+            id: 49,
+            point: 14,
+            qEng: "The official manuscript of Beowulf was written how many centuries after the poem was brought to England?",
+            qAr: "كم قرناً يفصل بين كتابة المخطوطة الرسمية لبيوولف وبين إحضار القصيدة إلى إنجلترا؟",
+            options: [
+                { eng: "One century", ar: "قرن واحد", correct: false, note: "Incorrect calculation." },
+                { eng: "Three centuries", ar: "ثلاثة قرون", correct: true, note: "Correct, brought in 8th century, written in 11th (11 - 8 = 3)." },
+                { eng: "Five centuries", ar: "خمسة قرون", correct: false, note: "Incorrect." },
+                { eng: "Eight centuries", ar: "ثمانية قرون", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Points 14 & 15: Brought in 8th century; official manuscript written in 11th century.",
+            evidenceAr: "تنص النقطتان 14 و15 على: أُحضرت في القرن الثامن؛ وكُتبت المخطوطة الرسمية في القرن الحادي عشر."
+        },
+        {
+            id: 50,
+            point: 20,
+            qEng: "The mixture of cultures that influenced the Anglo-Saxons included their own pagan roots and:",
+            qAr: "تضمن مزيج الثقافات الذي أثر على الأنجلوسكسون جذورهم الوثنية و:",
+            options: [
+                { eng: "The Viking legal system", ar: "النظام القانوني للفايكنج", correct: false, note: "Incorrect according to the source." },
+                { eng: "The Latin culture of the Roman Empire", ar: "الثقافة اللاتينية للإمبراطورية الرومانية", correct: true, note: "Correct, they mixed with Latin culture and Christianity." },
+                { eng: "The Greek philosophical schools", ar: "المدارس الفلسفية اليونانية", correct: false, note: "Incorrect." },
+                { eng: "The Celtic agricultural methods", ar: "الأساليب الزراعية الكلتية", correct: false, note: "Incorrect." }
+            ],
+            evidenceEng: "Point 20 states: They mixed with the Latin culture of the Roman Empire which religion was Christianity.",
+            evidenceAr: "تنص النقطة رقم (20) على: اختلطوا بالثقافة اللاتينية للإمبراطورية الرومانية التي كانت ديانتها المسيحية."
+        }
+    ];
+
+    // -------------------- متغيرات وأسس اللعبة --------------------
+    let currentIndex = 0;
+    let score = 0;
+    let answeredQuestions = new Set();
+    let translationActive = false;
+
+    const qText = document.getElementById('q-text');
+    const qTrans = document.getElementById('q-trans');
+    const optionsCont = document.getElementById('options');
+    const evidenceCont = document.getElementById('evidence');
+    const benefitsBox = document.getElementById('benefits');
+    const benefitsContent = document.getElementById('benefits-content');
+    const counterDisplay = document.getElementById('question-counter');
+    const scoreDisplay = document.getElementById('score-display');
+
+    function loadQuestion() {
+        const q = questions[currentIndex];
+        translationActive = false;
+        qTrans.style.display = 'none';
+        evidenceCont.style.display = 'none';
+        benefitsBox.style.display = 'none';
+        counterDisplay.innerText = `Question: ${q.id} / 50`;
+        qText.innerText = q.qEng;
+        qTrans.innerText = q.qAr;
+
+        optionsCont.innerHTML = '';
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `
+                <div>${String.fromCharCode(65 + idx)}) ${opt.eng}</div>
+                <div class="option-translation">${opt.ar}</div>
+            `;
+            btn.onclick = () => checkAnswer(idx, btn);
+            optionsCont.appendChild(btn);
+        });
+        updateScore();
+    }
+
+    function checkAnswer(idx, btn) {
+        const q = questions[currentIndex];
+        const isAlreadyAnswered = answeredQuestions.has(currentIndex);
+        
+        evidenceCont.innerHTML = `<strong>Point ${q.point} Evidence:</strong><br>${q.evidenceEng}<span class="evidence-ar">${q.evidenceAr}</span>`;
+        evidenceCont.style.display = 'block';
+        
+        let benefitsHTML = '';
+        q.options.forEach((opt, i) => {
+            benefitsHTML += `<div class="benefit-item">
+                <strong>${String.fromCharCode(65 + i)}_${opt.eng}</strong>
+                <span class="benefit-trans">${opt.ar}</span>
+                <div style="color:${opt.correct ? 'var(--correct-green)' : 'var(--wrong-red)'}; margin-top:5px; font-weight:bold;">
+                    ${opt.correct ? 'صحيح: ' : 'خطأ: '}${opt.note}
+                </div>
+            </div>`;
+        });
+        benefitsContent.innerHTML = benefitsHTML;
+        benefitsBox.style.display = 'block';
+
+        const btns = optionsCont.getElementsByClassName('option-btn');
+        for (let i = 0; i < btns.length; i++) {
+            if (q.options[i].correct) btns[i].classList.add('correct');
+            else btns[i].classList.add('wrong');
+            btns[i].disabled = true;
+        }
+
+        if (!isAlreadyAnswered) {
+            if (q.options[idx].correct) score++;
+            answeredQuestions.add(currentIndex);
+            updateScore();
+        }
+    }
+
+    function updateScore() {
+        let percentage = Math.round((score / 50) * 100);
+        scoreDisplay.innerText = `Score: ${percentage}%`;
+    }
+
+    function toggleTranslation() {
+        translationActive = !translationActive;
+        qTrans.style.display = translationActive ? 'block' : 'none';
+        const transTexts = document.getElementsByClassName('option-translation');
+        for (let t of transTexts) { t.style.display = translationActive ? 'block' : 'none'; }
+    }
+
+    document.getElementById('next-btn').onclick = () => {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            loadQuestion();
+        }
+    };
+
+    document.getElementById('prev-btn').onclick = () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            loadQuestion();
+        }
+    };
+
+    document.getElementById('translate-btn').onclick = toggleTranslation;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') document.getElementById('next-btn').click();
+        if (e.key === 'ArrowLeft') document.getElementById('prev-btn').click();
+        if (e.shiftKey && e.key === 'Enter') toggleTranslation();
+    });
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
