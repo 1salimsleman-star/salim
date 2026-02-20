@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfred the Great Quiz - سليم حاج سليمان</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-blue: #2196f3;
+            --correct-green: #4caf50;
+            --wrong-red: #f44336;
+            --translation-color: #d7ccc8;
+            --score-yellow: #fbc02d;
+            --benefit-purple: #9c27b0;
+            --name-green: #4caf50; /* لون الاسم الأخضر */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            direction: ltr;
+        }
+
+        /* اسم سليم حاج سليمان في الأعلى */
+        .author-name {
+            color: var(--name-green);
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 0 0 15px 0;
+            padding: 10px 20px;
+            background: rgba(76, 175, 80, 0.1); /* خلفية خضراء خفيفة جدًا */
+            border-radius: 50px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            width: fit-content;
+            max-width: 90%;
+            border: 1px solid var(--name-green);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+        }
+
+        #quiz-container {
+            background-color: var(--container-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 850px;
+            width: 95%;
+            margin-top: 5px;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+
+        #counter { font-weight: bold; color: var(--accent-blue); }
+        #score-display { font-weight: bold; color: var(--score-yellow); font-size: 1.2em; }
+
+        .question-text {
+            font-size: 1.25em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .translation {
+            display: none;
+            color: var(--translation-color);
+            font-size: 0.95em;
+            margin-top: 8px;
+            margin-bottom: 10px;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #333;
+            border: 2px solid #444;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .option-btn:hover { border-color: var(--accent-blue); }
+        
+        .correct { background-color: var(--correct-green) !important; border-color: #2e7d32 !important; }
+        .wrong { background-color: var(--wrong-red) !important; border-color: #c62828 !important; }
+
+        .feedback-section {
+            margin-top: 25px;
+            display: none;
+            border-top: 2px dashed #444;
+            padding-top: 20px;
+        }
+
+        .evidence-box {
+            background-color: #263238;
+            padding: 15px;
+            border-left: 5px solid var(--accent-blue);
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .benefits-box {
+            background-color: #311b92;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--benefit-purple);
+        }
+
+        .benefit-item { margin-bottom: 12px; font-size: 0.95em; border-bottom: 1px solid #ffffff22; padding-bottom: 8px; line-height: 1.4; }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        button.nav-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        button#translate-btn {
+            background-color: #5d4037;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .rtl { direction: rtl; text-align: right; font-family: 'Arial', sans-serif; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== اسم سليم حاج سليمان في الأعلى ===== -->
+    <div class="author-name">سليم حاج سليمان</div>
+
+    <div id="quiz-container">
+        <div class="header-info">
+            <div id="counter">Question: 1 / 20</div>
+            <div id="score-display">Score: 0%</div>
+        </div>
+
+        <div id="question-area">
+            <div class="question-text" id="q-eng">Question loading...</div>
+            <div class="translation rtl" id="q-arb"></div>
+        </div>
+
+        <div class="options-container" id="options-area"></div>
+
+        <div class="feedback-section" id="feedback-area">
+            <div class="evidence-box">
+                <strong>Evidence / الدليل:</strong>
+                <p id="evidence-eng" style="margin: 5px 0;"></p>
+                <p id="evidence-arb" class="rtl" style="margin: 5px 0;"></p>
+            </div>
+            <div class="benefits-box">
+                <strong style="color: #ea80fc;">Benefits / فوائد:</strong>
+                <div id="benefits-list" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="nav-btn" id="back-btn">BACK</button>
+            <button id="translate-btn">TRANSLATE (Shift+Enter)</button>
+            <button class="nav-btn" id="next-btn">NEXT</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 27,
+                qEng: "1. Based on King Alfred’s scholarly interests, which of the following fields was NOT explicitly mentioned as a focus of his?",
+                qArb: "بناءً على اهتمامات الملك ألفريد العلمية، أي من المجالات التالية لم يتم ذكره صراحةً كتركيز له؟",
+                options: [
+                    { eng: "Literature", arb: "الأدب", letter: "A" },
+                    { eng: "Art", arb: "الفن", letter: "B" },
+                    { eng: "Philosophy", arb: "الفلسفة", letter: "C" },
+                    { eng: "History", arb: "التاريخ", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 27 states: Alfred the Great was interested in literature, art and history.",
+                evidenceArb: "تنص النقطة رقم 27 على: كان ألفريد العظيم مهتمًا بالأدب والفن والتاريخ.",
+                benefits: [
+                    "A_Wrong because literature was explicitly mentioned. / خطأ لأن الأدب ذُكر صراحة.",
+                    "B_Wrong because art was explicitly mentioned. / خطأ لأن الفن ذُكر صراحة.",
+                    "C_Correct because Philosophy was NOT mentioned in the list. / صحيح لأن الفلسفة لم تُذكر في القائمة.",
+                    "D_Wrong because history was one of his interests. / خطأ لأن التاريخ كان من اهتماماته."
+                ]
+            },
+            {
+                id: 27,
+                qEng: "2. King Alfred’s translation of the history of the Anglo-Saxons involved a linguistic shift from:",
+                qArb: "تضمنت ترجمة الملك ألفريد لتاريخ الأنجلوسكسون تحولاً لغوياً من:",
+                options: [
+                    { eng: "Old English to Latin", arb: "من الإنجليزية القديمة إلى اللاتينية", letter: "A" },
+                    { eng: "Latin to Old English", arb: "من اللاتينية إلى الإنجليزية القديمة", letter: "B" },
+                    { eng: "Old Norse to Old English", arb: "من النورسية القديمة إلى الإنجليزية القديمة", letter: "C" },
+                    { eng: "Germanic to Old English", arb: "من الجرمانية إلى الإنجليزية القديمة", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 27 states: He translated the history of the Anglo-Saxon from Latin into Old English.",
+                evidenceArb: "تنص النقطة رقم 27 على: ترجم تاريخ الأنجلوسكسون من اللاتينية إلى الإنجليزية القديمة.",
+                benefits: [
+                    "A_Wrong direction of translation. / اتجاه خاطئ للترجمة.",
+                    "B_Correct; the original source was Latin. / صحيح؛ المصدر الأصلي كان اللاتينية.",
+                    "C_Wrong; Old Norse was the Vikings' language. / خطأ؛ النورسية كانت لغة الفايكنغ.",
+                    "D_Wrong; Germanic is the general family. / خطأ؛ الجرمانية هي العائلة العامة."
+                ]
+            },
+            {
+                id: 28,
+                qEng: "3. In which specific year did the compilation of The Anglo-Saxon Chronicle begin?",
+                qArb: "في أي عام تحديداً بدأ تجميع (وقائع الأنجلوسكسون)؟",
+                options: [
+                    { eng: "1154", arb: "1154م", letter: "A" },
+                    { eng: "800", arb: "800م", letter: "B" },
+                    { eng: "850", arb: "850م", letter: "C" },
+                    { eng: "1066", arb: "1066م", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 28 states: The writing of this book started in 850 during the reign of King Alfred.",
+                evidenceArb: "تنص النقطة رقم 28 على: بدأت كتابة هذا الكتاب عام 850 خلال حكم الملك ألفريد العظيم.",
+                benefits: [
+                    "A_Wrong; this is the end year (1154). / خطأ؛ هذا عام الانتهاء.",
+                    "B_Wrong; not mentioned in source. / خطأ؛ لم يذكر في المصدر.",
+                    "C_Correct; it matches the historical start date. / صحيح؛ يطابق تاريخ البدء التاريخي.",
+                    "D_Wrong; year of Norman conquest. / خطأ؛ عام الغزو النورماني."
+                ]
+            },
+            {
+                id: 28,
+                qEng: "4. The recording of The Anglo-Saxon Chronicle concluded during which historical period?",
+                qArb: "متى انتهى تسجيل (وقائع الأنجلوسكسون) في أي عصر تاريخي؟",
+                options: [
+                    { eng: "The Viking Era", arb: "عصر الفايكنغ", letter: "A" },
+                    { eng: "The Norman Era", arb: "العصر النورماني", letter: "B" },
+                    { eng: "The Roman Era", arb: "العصر الروماني", letter: "C" },
+                    { eng: "The Victorian Era", arb: "العصر الفيكتوري", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 28 states: it lasted until 1154 during the Norman era.",
+                evidenceArb: "تنص النقطة رقم 28 على: واستمرت حتى عام 1154 خلال العصر النورماني.",
+                benefits: [
+                    "A_Wrong; it survived long after Vikings. / خطأ؛ استمر الكتاب بعد الفايكنغ بكثير.",
+                    "B_Correct; explicitly mentioned as Norman era. / صحيح؛ ذكر صراحة كالعصر النورماني.",
+                    "C_Wrong; Romans were long gone. / خطأ؛ الرومان غادروا منذ زمن.",
+                    "D_Wrong; Victorian era is modern. / خطأ؛ العصر الفيكتوري حديث."
+                ]
+            },
+            {
+                id: 28,
+                qEng: "5. How can the nature of the work in The Anglo-Saxon Chronicle be best described?",
+                qArb: "كيف يمكن وصف طبيعة العمل في (وقائع الأنجلوسكسون) بأفضل شكل؟",
+                options: [
+                    { eng: "A single-authored poetic epic", arb: "ملحمة شعرية من مؤلف واحد", letter: "A" },
+                    { eng: "A short-term political manifesto", arb: "بيان سياسي قصير المدى", letter: "B" },
+                    { eng: "A continuous work adding information over time", arb: "عمل مستمر يضيف معلومات بمرور الوقت", letter: "C" },
+                    { eng: "A collection of pagan myths", arb: "مجموعة من الأساطير الوثنية", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 28 states: It was a continuous work that added information as history progresses.",
+                evidenceArb: "تنص النقطة رقم 28 على: كان عملاً مستمرًا يضيف معلومات مع تقدّم التاريخ.",
+                benefits: [
+                    "A_Wrong; it was prose, not poetry. / خطأ؛ كان نثراً وليس شعراً.",
+                    "B_Wrong; it was long-term history. / خطأ؛ كان تاريخاً طويل الأمد.",
+                    "C_Correct; it was updated as history progressed. / صحيح؛ كان يتم تحديثه مع تقدم التاريخ.",
+                    "D_Wrong; it was historical, not just myths. / خطأ؛ كان تاريخياً وليس مجرد أساطير."
+                ]
+            },
+            {
+                id: 28,
+                qEng: "6. Which group was primarily responsible for the physical production of prose works like the Chronicle?",
+                qArb: "أي مجموعة كانت مسؤولة بشكل أساسي عن الإنتاج المادي للأعمال النثرية مثل (الوقائع)؟",
+                options: [
+                    { eng: "King Alfred's soldiers", arb: "جنود الملك ألفريد", letter: "A" },
+                    { eng: "Danish settlers", arb: "المستوطنون الدنماركيون", letter: "B" },
+                    { eng: "Priests and monks in monasteries", arb: "الكهنة والرهبان في الأديرة", letter: "C" },
+                    { eng: "Merchants and traders", arb: "التجار والمبادلون", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 28 states: Priests and monks in monasteries were responsible for writing such prose works.",
+                evidenceArb: "تنص النقطة رقم 28 على: كان الكهنة والرهبان في الأديرة مسؤولين عن كتابة هذه الأعمال.",
+                benefits: [
+                    "A_Wrong; soldiers didn't handle academic writing. / خطأ؛ لم يتول الجنود الكتابة الأكاديمية.",
+                    "B_Wrong; Danes were mostly warriors or farmers. / خطأ؛ الدنماركيون كانوا محاربين أو مزارعين.",
+                    "C_Correct; Monasteries were education hubs. / صحيح؛ الأديرة كانت مراكز التعليم.",
+                    "D_Wrong; Merchants were busy with trade. / خطأ؛ التجار انشغلوا بالتجارة."
+                ]
+            },
+            {
+                id: 29,
+                qEng: "7. The transition of Old English into a written language marked a departure from its origins in:",
+                qArb: "مثل انتقال الإنجليزية القديمة إلى لغة مكتوبة ابتعاداً عن أصولها في:",
+                options: [
+                    { eng: "Monastic culture", arb: "الثقافة الديرية (الأديرة)", letter: "A" },
+                    { eng: "The pagan culture", arb: "الثقافة الوثنية", letter: "B" },
+                    { eng: "The Norman culture", arb: "الثقافة النورمانية", letter: "C" },
+                    { eng: "Latin scholarly culture", arb: "الثقافة العلمية اللاتينية", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 29 states: Old English moved from being a spoken language of the pagan culture to a written language.",
+                evidenceArb: "تنص النقطة رقم 29 على: انتقلت الإنجليزية القديمة من كونها لغة منطوقة للثقافة الوثنية إلى مكتوبة.",
+                benefits: [
+                    "A_Wrong; it moved TO monastic culture tools. / خطأ؛ انتقلت إلى أدوات الثقافة الديرية.",
+                    "B_Correct; its origins were the spoken pagan traditions. / صحيح؛ أصولها كانت التقاليد الوثنية المنطوقة.",
+                    "C_Wrong; Norman culture came much later. / خطأ؛ النورمانية جاءت لاحقاً.",
+                    "D_Wrong; Latin was the source of translation. / خطأ؛ اللاتينية كانت مصدر الترجمة."
+                ]
+            },
+            {
+                id: 30,
+                qEng: "8. The invaders known as the Vikings or Danes originated from which modern-day country?",
+                qArb: "الغزاة المعروفون بالفايكنغ أو الدنماركيين، من أي دولة حديثة جاؤوا؟",
+                options: [
+                    { eng: "Norway", arb: "النرويج", letter: "A" },
+                    { eng: "Sweden", arb: "السويد", letter: "B" },
+                    { eng: "Denmark", arb: "الدنمارك", letter: "C" },
+                    { eng: "Germany", arb: "ألمانيا", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 30 states: The Vikings or the Danes came from Denmark to England.",
+                evidenceArb: "تنص النقطة رقم 30 على: جاء الفايكنغ أو الدنماركيون من الدنمارك إلى إنجلترا.",
+                benefits: [
+                    "A_Wrong; though Vikings also lived there, source says Denmark. / خطأ؛ رغم وجود فايكنغ هناك، المصدر حدد الدنمارك.",
+                    "B_Wrong; Sweden is not the primary origin mentioned. / خطأ؛ السويد ليست الأصل المذكور أساساً.",
+                    "C_Correct; the text explicitly names Denmark. / صحيح؛ النص يسمي الدنمارك صراحة.",
+                    "D_Wrong; Germany was the origin of early Anglo-Saxons. / خطأ؛ ألمانيا أصل الأنجلوسكسون الأوائل."
+                ]
+            },
+            {
+                id: 30,
+                qEng: "9. During which centuries did the Vikings cause significant trouble in England?",
+                qArb: "خلال أي قرون تسبب الفايكنغ بمشاكل كبيرة في إنجلترا؟",
+                options: [
+                    { eng: "5th, 6th, and 7th", arb: "القرن 5، 6، 7", letter: "A" },
+                    { eng: "8th, 9th, and 10th", arb: "القرن 8، 9، 10", letter: "B" },
+                    { eng: "11th, 12th, and 13th", arb: "القرن 11، 12، 13", letter: "C" },
+                    { eng: "1st and 2nd", arb: "القرن 1، 2", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 30 states: caused troubles in the 8th, 9th and 10th centuries.",
+                evidenceArb: "تنص النقطة رقم 30 على: تسببوا في مشاكل في القرون الثامن والتاسع والعاشر.",
+                benefits: [
+                    "A_Wrong; these were early settlement centuries. / خطأ؛ كانت هذه قرون الاستيطان الأولى.",
+                    "B_Correct; this is the main Viking activity period. / صحيح؛ هذه فترة نشاط الفايكنغ الرئيسية.",
+                    "C_Wrong; these are later medieval centuries. / خطأ؛ هذه قرون العصور الوسطى المتأخرة.",
+                    "D_Wrong; this was the Roman period. / خطأ؛ كانت هذه الفترة الرومانية."
+                ]
+            },
+            {
+                id: 31,
+                qEng: "10. King Alfred the Great held the specific title of the King of:",
+                qArb: "حمل الملك ألفريد العظيم اللقب المحدد لملك:",
+                options: [
+                    { eng: "Mercia", arb: "ميرسيا", letter: "A" },
+                    { eng: "Danelaw", arb: "دانيلو", letter: "B" },
+                    { eng: "Wessex", arb: "ويسيكس", letter: "C" },
+                    { eng: "Northumbria", arb: "نورثومبريا", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 31 states: King Alfred was the king of Wessex.",
+                evidenceArb: "تنص النقطة رقم 31 على: كان الملك ألفريد ملك ويسيكس.",
+                benefits: [
+                    "A_Wrong; Mercia was a different kingdom. / خطأ؛ ميرسيا مملكة مختلفة.",
+                    "B_Wrong; Danelaw was the Danish territory. / خطأ؛ دانيلو كانت أراضي الدنماركيين.",
+                    "C_Correct; Wessex was his specific royal domain. / صحيح؛ ويسيكس كانت نطاقه الملكي.",
+                    "D_Wrong; Northumbria was in the north. / خطأ؛ نورثومبريا كانت في الشمال."
+                ]
+            },
+            {
+                id: 31,
+                qEng: "11. Geographically, the kingdom ruled by Alfred was situated in which part of England?",
+                qArb: "جغرافياً، أين كانت تقع المملكة التي حكمها ألفريد في إنجلترا؟",
+                options: [
+                    { eng: "The North", arb: "الشمال", letter: "A" },
+                    { eng: "The West", arb: "الغرب", letter: "B" },
+                    { eng: "The East", arb: "الشرق", letter: "C" },
+                    { eng: "The South", arb: "الجنوب", letter: "D" }
+                ],
+                correct: "D",
+                evidenceEng: "Point 31 states: King Alfred was the king of Wessex in the south of England.",
+                evidenceArb: "تنص النقطة رقم 31 على: كان الملك ألفريد ملك ويسيكس في جنوب إنجلترا.",
+                benefits: [
+                    "A_Wrong; the North was often under Danish control. / خطأ؛ الشمال كان غالباً تحت سيطرة الدنماركيين.",
+                    "B_Wrong; West is not the primary location mentioned. / خطأ؛ الغرب ليس الموقع الرئيسي المذكور.",
+                    "C_Wrong; East was where the Danes mostly settled. / خطأ؛ الشرق كان حيث استقر الدنماركيون غالباً.",
+                    "D_Correct; Wessex is historically in the south. / صحيح؛ ويسيكس تقع تاريخياً في الجنوب."
+                ]
+            },
+            {
+                id: 31,
+                qEng: "12. What was Alfred’s major political achievement regarding the identity of the people?",
+                qArb: "ما هو إنجاز ألفريد السياسي الكبير بخصوص هوية الشعب؟",
+                options: [
+                    { eng: "He renamed the nation Wessex.", arb: "أعاد تسمية الأمة بويسيكس", letter: "A" },
+                    { eng: "He called the whole nation an Anglo-Saxon nation.", arb: "أطلق على الأمة كلها أمة أنجلوسكسونية", letter: "B" },
+                    { eng: "He forced the Danes to speak only Latin.", arb: "أجبر الدنماركيين على التحدث باللاتينية فقط", letter: "C" },
+                    { eng: "He abolished the Anglo-Saxon title.", arb: "ألغى لقب الأنجلوسكسون", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 31 states: He was able to... still call the whole nation an Anglo-Saxon nation.",
+                evidenceArb: "تنص النقطة رقم 31 على: تمكّن من... ما زال يطلق على الأمة كلها أمة أنجلوسكسونية.",
+                benefits: [
+                    "A_Wrong; Wessex was only his kingdom. / خطأ؛ ويسيكس كانت مملكته فقط.",
+                    "B_Correct; he unified the identity under one name. / صحيح؛ وحد الهوية تحت اسم واحد.",
+                    "C_Wrong; he interacted with Danes through Old Norse. / خطأ؛ تفاعل معهم من خلال النورسية القديمة.",
+                    "D_Wrong; he reinforced the title instead of abolishing it. / خطأ؛ عزز اللقب بدلاً من إلغائه."
+                ]
+            },
+            {
+                id: 32,
+                qEng: "13. What was the primary purpose of the 'Danelaw' established by Alfred?",
+                qArb: "ما الغرض الأساسي من 'قانون الدانيلو' الذي أسسه ألفريد؟",
+                options: [
+                    { eng: "To expel all Danes from England", arb: "طرد جميع الدنماركيين من إنجلترا", letter: "A" },
+                    { eng: "To allow Danes to settle in England under his reign", arb: "السماح للدنماركيين بالاستقرار في إنجلترا تحت حكمه", letter: "B" },
+                    { eng: "To force Danes to move back to Denmark", arb: "إجبار الدنماركيين على العودة للدنمارك", letter: "C" },
+                    { eng: "To adopt the Danish legal system for all Anglo-Saxons", arb: "اعتماد النظام القانوني الدنماركي لكل الأنجلوسكسون", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 32 states: It allowed the Danes to settle in England, but under the reign of king Alfred.",
+                evidenceArb: "تنص النقطة رقم 32 على: سمح للدنماركيين بالاستقرار في إنجلترا ولكن تحت حكم الملك ألفريد.",
+                benefits: [
+                    "A_Wrong; it was a coexistence agreement. / خطأ؛ كان اتفاقية تعايش.",
+                    "B_Correct; it organized their settlement under his authority. / صحيح؛ نظم استقرارهم تحت سلطته.",
+                    "C_Wrong; it was about staying, not leaving. / خطأ؛ كان عن البقاء وليس الرحيل.",
+                    "D_Wrong; it applied mostly to the Danish areas. / خطأ؛ طبق غالباً في المناطق الدنماركية."
+                ]
+            },
+            {
+                id: 33,
+                qEng: "14. The language spoken by the Danish invaders is identified as:",
+                qArb: "اللغة التي تحدث بها الغزاة الدنماركيون تعرف بـ:",
+                options: [
+                    { eng: "Germanic Anglo-Saxon", arb: "الجرمانية الأنجلوسكسونية", letter: "A" },
+                    { eng: "Old Norse", arb: "النورسية القديمة", letter: "B" },
+                    { eng: "Norman French", arb: "الفرنسية النورمانية", letter: "C" },
+                    { eng: "Vulgar Latin", arb: "اللاتينية العامية", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 33 states: The language of the Danes was an Old Norse language.",
+                evidenceArb: "تنص النقطة رقم 33 على: كانت لغة الدنماركيين لغة نورسية قديمة.",
+                benefits: [
+                    "A_Wrong; this was the language of the English. / خطأ؛ هذه كانت لغة الإنجليز.",
+                    "B_Correct; Danes spoke Old Norse. / صحيح؛ الدنماركيون تحدثوا النورسية القديمة.",
+                    "C_Wrong; this came with the Normans in 1066. / خطأ؛ هذه جاءت مع النورمان عام 1066.",
+                    "D_Wrong; Latin was a scholarly/religious language. / خطأ؛ اللاتينية كانت لغة علمية ودينية."
+                ]
+            },
+            {
+                id: 33,
+                qEng: "15. How did the Danish language compare to the Anglo-Saxon Germanic language?",
+                qArb: "كيف كانت لغة الدنماركيين مقارنة باللغة الجرمانية الأنجلوسكسونية؟",
+                options: [
+                    { eng: "It was much more complex and harsher.", arb: "كانت أكثر تعقيداً وقسوة", letter: "A" },
+                    { eng: "It was softer than the Anglo-Saxon language.", arb: "كانت أكثر ليونة من اللغة الأنجلوسكسونية", letter: "B" },
+                    { eng: "It was identical in every way.", arb: "كانتا متطابقتين في كل شيء", letter: "C" },
+                    { eng: "It was a written language while Anglo-Saxon was not.", arb: "كانت لغة مكتوبة بينما الأنجلوسكسونية لم تكن كذلك", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 33 states: It (Old Norse) was softer than the Anglo-Saxon Germanic language.",
+                evidenceArb: "تنص النقطة رقم 33 على: كانت أكثر ليونة من اللغة الجرمانية الأنجلوسكسونية.",
+                benefits: [
+                    "A_Wrong; the source says the opposite. / خطأ؛ المصدر يقول العكس.",
+                    "B_Correct; Old Norse was described as 'softer'. / صحيح؛ النورسية وصفت بأنها 'أكثر ليونة'.",
+                    "C_Wrong; they were different though related. / خطأ؛ كانتا مختلفتين رغم القرابة.",
+                    "D_Wrong; Anglo-Saxon became written in this era too. / خطأ؛ الأنجلوسكسونية أصبحت مكتوبة أيضاً."
+                ]
+            },
+            {
+                id: 33,
+                qEng: "16. What was the linguistic result of the interaction between Old English and the Danes?",
+                qArb: "ما النتيجة اللغوية للتفاعل بين الإنجليزية القديمة والدنماركيين؟",
+                options: [
+                    { eng: "Old English became more rigid and difficult.", arb: "أصبحت الإنجليزية القديمة أكثر جموداً وصعوبة", letter: "A" },
+                    { eng: "Old English was completely replaced by Old Norse.", arb: "استبدلت الإنجليزية القديمة تماماً بالنورسية", letter: "B" },
+                    { eng: "Old English softened and became easier.", arb: "أصبحت الإنجليزية القديمة أكثر ليونة وسهولة", letter: "C" },
+                    { eng: "Old English became a dead language.", arb: "أصبحت الإنجليزية القديمة لغة ميتة", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 33 states: Because of mixing with the Danes, Old English softened and became easy.",
+                evidenceArb: "تنص النقطة رقم 33 على: بسبب الاختلاط مع الدنماركيين أصبحت الإنجليزية القديمة أكثر ليونة وأسهل.",
+                benefits: [
+                    "A_Wrong; interaction simplified the language. / خطأ؛ التفاعل بسط اللغة.",
+                    "B_Wrong; both mixed, one didn't replace the other. / خطأ؛ اختلطا ولم يحل أحدهما محل الآخر.",
+                    "C_Correct; mixing led to softening and ease. / صحيح؛ الاختلاط أدى لليونة والسهولة.",
+                    "D_Wrong; it evolved into Middle English later. / خطأ؛ تطورت للإنجليزية الوسطى لاحقاً."
+                ]
+            },
+            {
+                id: 34,
+                qEng: "17. Historically, the term 'inflected language' as applied to Old English refers to the use of:",
+                qArb: "تاريخياً، مصطلح 'لغة إعرابية' المطبق على الإنجليزية القديمة يشير لاستخدام:",
+                options: [
+                    { eng: "Complex tonal patterns", arb: "أنماط نغمية معقدة", letter: "A" },
+                    { eng: "Many suffixes", arb: "الكثير من اللواحق (الزيادات في أواخر الكلمات)", letter: "B" },
+                    { eng: "Only spoken sounds without grammar", arb: "أصوات منطوقة فقط بدون قواعد", letter: "C" },
+                    { eng: "Latin alphabets only", arb: "الأبجدية اللاتينية فقط", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 34 states: Inflected languages contain many suffixes.",
+                evidenceArb: "تنص النقطة رقم 34 على: تحتوي اللغات الإعرابية على العديد من اللواحق.",
+                benefits: [
+                    "A_Wrong; suffixes, not tones, define inflection here. / خطأ؛ اللواحق هي ما يحدد الإعراب هنا.",
+                    "B_Correct; suffixes were used for grammar. / صحيح؛ استخدمت اللواحق للقواعد الإعرابية.",
+                    "C_Wrong; inflected implies a complex grammar. / خطأ؛ الإعراب يتضمن قواعد معقدة.",
+                    "D_Wrong; alphabet is separate from inflection. / خطأ؛ الأبجدية منفصلة عن الإعراب."
+                ]
+            },
+            {
+                id: 34,
+                qEng: "18. Interaction with the Danes caused Old English to become:",
+                qArb: "أدى التفاعل مع الدنماركيين لجعل الإنجليزية القديمة تصبح:",
+                options: [
+                    { eng: "More inflected", arb: "أكثر إعراباً", letter: "A" },
+                    { eng: "Less inflected", arb: "أقل إعراباً", letter: "B" },
+                    { eng: "Purely Latin-based", arb: "قائمة على اللاتينية تماماً", letter: "C" },
+                    { eng: "Entirely suffix-dependent", arb: "تعتمد كلياً على اللواحق", letter: "D" }
+                ],
+                correct: "B",
+                evidenceEng: "Point 34 states: With the mixture with Danes, it became less inflected.",
+                evidenceArb: "تنص النقطة رقم 34 على: مع الاختلاط مع الدنماركيين أصبحت أقل إعرابًا.",
+                benefits: [
+                    "A_Wrong; mixture simplified the grammar. / خطأ؛ الاختلاط بسط القواعد.",
+                    "B_Correct; suffixes began to drop away. / صحيح؛ بدأت اللواحق في الاختفاء.",
+                    "C_Wrong; Latin was separate from Viking influence. / خطأ؛ اللاتينية كانت منفصلة عن تأثير الفايكنغ.",
+                    "D_Wrong; it moved away from suffixes. / خطأ؛ ابتعدت عن استخدام اللواحق."
+                ]
+            },
+            {
+                id: 28,
+                qEng: "19. The Anglo-Saxon Chronicle provides a historical record that spanned approximately how many years?",
+                qArb: "تقدم (وقائع الأنجلوسكسون) سجلاً تاريخياً يمتد لحوالي كم عام؟",
+                options: [
+                    { eng: "100 years", arb: "100 عام", letter: "A" },
+                    { eng: "200 years", arb: "200 عام", letter: "B" },
+                    { eng: "304 years", arb: "304 عام", letter: "C" },
+                    { eng: "50 years", arb: "50 عام", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 28 states: writing started in 850 and lasted until 1154 (1154 - 850 = 304).",
+                evidenceArb: "تنص النقطة رقم 28 على: بدأت الكتابة عام 850 واستمرت حتى عام 1154 (1154 - 850 = 304).",
+                benefits: [
+                    "A_Wrong; it lasted much longer. / خطأ؛ استمرت لفترة أطول.",
+                    "B_Wrong; this calculation is incorrect. / خطأ؛ هذا الحساب غير صحيح.",
+                    "C_Correct; based on the subtraction of start and end years. / صحيح؛ بناءً على طرح سنة البدء من سنة الانتهاء.",
+                    "D_Wrong; it's a very long chronicle. / خطأ؛ إنه كتاب وقائع طويل جداً."
+                ]
+            },
+            {
+                id: 34,
+                qEng: "20. According to the sources, why did Old English experience a reduction in its inflected nature?",
+                qArb: "وفقاً للمصادر، لماذا شهدت الإنجليزية القديمة تراجعاً في طبيعتها الإعرابية؟",
+                options: [
+                    { eng: "Because of King Alfred's direct orders", arb: "بسبب أوامر الملك ألفريد المباشرة", letter: "A" },
+                    { eng: "Because it moved to monasteries", arb: "بسبب انتقالها للأديرة", letter: "B" },
+                    { eng: "Because of the mixture with the Danes", arb: "بسبب الاختلاط مع الدنماركيين", letter: "C" },
+                    { eng: "Because it was translated from Latin", arb: "بسبب ترجمتها من اللاتينية", letter: "D" }
+                ],
+                correct: "C",
+                evidenceEng: "Point 34 states: With the mixture with Danes, it became less inflected.",
+                evidenceArb: "تنص النقطة رقم 34 على: ومع الاختلاط مع الدنماركيين أصبحت أقل إعرابًا.",
+                benefits: [
+                    "A_Wrong; Alfred focused on translation, not grammar rules. / خطأ؛ ركز ألفريد على الترجمة وليس قواعد النحو.",
+                    "B_Wrong; monasteries preserved the language. / خطأ؛ الأديرة حافظت على اللغة.",
+                    "C_Correct; linguistic mixture is the reason for simplified grammar. / صحيح؛ الاختلاط اللغوي هو سبب تبسيط القواعد.",
+                    "D_Wrong; translation didn't cause loss of inflection. / خطأ؛ الترجمة لم تسبب فقدان الإعراب."
+                ]
+            }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let answeredQuestions = new Array(questions.length).fill(false);
+        let translationVisible = false;
+
+        const qEng = document.getElementById('q-eng');
+        const qArb = document.getElementById('q-arb');
+        const optionsArea = document.getElementById('options-area');
+        const feedbackArea = document.getElementById('feedback-area');
+        const scoreDisplay = document.getElementById('score-display');
+        const counterDisplay = document.getElementById('counter');
+
+        function loadQuestion() {
+            const q = questions[currentIdx];
+            qEng.textContent = q.qEng;
+            qArb.textContent = q.qArb;
+            counterDisplay.textContent = `Question: ${currentIdx + 1} / ${questions.length}`;
+            
+            qArb.style.display = translationVisible ? 'block' : 'none';
+
+            optionsArea.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <div class="opt-eng"><strong>${opt.letter}.</strong> ${opt.eng}</div>
+                    <div class="translation rtl" style="display: ${translationVisible ? 'block' : 'none'}; color: #d7ccc8;">${opt.arb}</div>
+                `;
+                btn.onclick = () => handleAnswer(opt.letter, btn);
+                optionsArea.appendChild(btn);
+            });
+
+            feedbackArea.style.display = answeredQuestions[currentIdx] ? 'block' : 'none';
+            if (answeredQuestions[currentIdx]) {
+                highlightCorrect(q.correct);
+                showResults(q.correct);
+            }
+        }
+
+        function handleAnswer(selected, btn) {
+            if (answeredQuestions[currentIdx]) return;
+
+            const q = questions[currentIdx];
+            answeredQuestions[currentIdx] = true;
+
+            if (selected === q.correct) {
+                score++;
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                highlightCorrect(q.correct);
+            }
+
+            updateScore();
+            showResults(q.correct);
+        }
+
+        function highlightCorrect(correctLetter) {
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => {
+                if (b.innerText.trim().startsWith(correctLetter + ".")) {
+                    b.classList.add('correct');
+                }
+            });
+        }
+
+        function showResults(correctLetter) {
+            const q = questions[currentIdx];
+            feedbackArea.style.display = 'block';
+            document.getElementById('evidence-eng').textContent = q.evidenceEng;
+            document.getElementById('evidence-arb').textContent = q.evidenceArb;
+            
+            const benefitsList = document.getElementById('benefits-list');
+            benefitsList.innerHTML = '';
+            q.benefits.forEach(ben => {
+                const div = document.createElement('div');
+                div.className = 'benefit-item';
+                div.textContent = ben;
+                benefitsList.appendChild(div);
+            });
+        }
+
+        function updateScore() {
+            const answeredCount = answeredQuestions.filter(x => x).length;
+            const percentage = Math.round((score / questions.length) * 100);
+            scoreDisplay.textContent = `Score: ${percentage}%`;
+        }
+
+        function nextQuestion() {
+            if (currentIdx < questions.length - 1) {
+                currentIdx++;
+                translationVisible = false;
+                loadQuestion();
+            }
+        }
+
+        function backQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                loadQuestion();
+            }
+        }
+
+        function toggleTranslation() {
+            translationVisible = !translationVisible;
+            loadQuestion();
+        }
+
+        document.getElementById('next-btn').onclick = nextQuestion;
+        document.getElementById('back-btn').onclick = backQuestion;
+        document.getElementById('translate-btn').onclick = toggleTranslation;
+
+        window.addEventListener('keydown', (e) => {
+            if (e.shiftKey && e.key === 'Enter') {
+                toggleTranslation();
+            } else if (e.key === 'ArrowRight') {
+                nextQuestion();
+            } else if (e.key === 'ArrowLeft') {
+                backQuestion();
+            }
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
